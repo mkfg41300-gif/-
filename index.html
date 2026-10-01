@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>رحلتي السودان | حجز رحلات الطيران</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap');
+:root{--nile:#075985;--nile-dark:#043b56;--sand:#e7d1a8;--sand-light:#faf3e5;--gold:#c59a4b;--red:#a63d40;--green:#416b46;--white:#fff;--text:#18303b;--muted:#6b7b83;--shadow:0 12px 35px #00000012}
+*{box-sizing:border-box}body{margin:0;font-family:Cairo,Arial,sans-serif;background:#f6f8f9;color:var(--text)}
+button,input{font-family:inherit}button{cursor:pointer;border:0}
+.sudan-pattern{height:7px;background:repeating-linear-gradient(135deg,var(--sand) 0 14px,var(--gold) 14px 28px,var(--nile) 28px 42px,var(--red) 42px 56px)}
+header{background:var(--white);box-shadow:0 3px 18px #0000000b;position:sticky;top:0;z-index:20}
+.nav{max-width:1150px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+.logo{font-size:24px;font-weight:800;color:var(--nile-dark)}.logo span{color:var(--gold);font-size:17px}
+.nav-actions{display:flex;gap:8px;align-items:center}.btn{padding:10px 16px;border-radius:10px;font-weight:700}.primary{background:var(--nile);color:#fff}.secondary{background:var(--sand-light);color:var(--nile-dark)}.danger{background:#fbeaea;color:var(--red)}
+.hero{background:linear-gradient(135deg,var(--nile-dark),var(--nile));color:#fff;padding:60px 20px}
+.hero-inner{max-width:1150px;margin:auto}.hero h1{font-size:38px;margin:0 0 8px}.hero p{margin:0 0 28px;opacity:.9}
+.search-box{background:#fff;color:var(--text);border-radius:18px;padding:18px;box-shadow:var(--shadow);display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}.field input{width:100%;padding:12px;border:1px solid #d8e0e3;border-radius:10px;outline:none}.field input:focus{border-color:var(--nile)}
+.container{max-width:1150px;margin:35px auto;padding:0 20px}.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.results{display:grid;gap:14px}.flight{background:#fff;border-radius:16px;padding:18px;box-shadow:var(--shadow);display:grid;grid-template-columns:1.2fr 2fr 1fr 1fr auto;align-items:center;gap:15px}
+.airline{font-weight:800;color:var(--nile-dark)}.small{font-size:13px;color:var(--muted)}.route{display:flex;align-items:center;gap:12px}.time{font-size:22px;font-weight:800}.arrow{color:var(--gold);font-size:22px}.price{font-size:23px;font-weight:800;color:var(--nile)}.seats{font-size:13px;color:var(--green)}
+.empty{background:#fff;border-radius:15px;padding:35px;text-align:center;color:var(--muted)}
+.modal-back{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.modal-back.show{display:flex}
+.modal{background:#fff;border-radius:18px;width:min(560px,100%);max-height:90vh;overflow:auto;padding:24px}.modal h2{margin-top:0;color:var(--nile-dark)}.close{float:left;background:#eee;border-radius:50%;width:34px;height:34px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-grid .full{grid-column:1/-1}.form-field label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}.form-field input{width:100%;padding:11px;border:1px solid #d8e0e3;border-radius:9px}.form-actions{display:flex;gap:8px;margin-top:18px}.form-actions .btn{flex:1}
+.account-card,.booking-card{background:#fff;border-radius:16px;padding:20px;box-shadow:var(--shadow);margin-bottom:14px}.booking-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.status{padding:5px 10px;border-radius:20px;font-size:12px;background:#eaf4eb;color:var(--green)}.status.cancelled{background:#fbeaea;color:var(--red)}
+.ticket{border:2px dashed var(--sand);border-radius:16px;padding:20px;background:var(--sand-light)}.ticket h3{color:var(--nile-dark)}
+footer{margin-top:60px;background:var(--nile-dark);color:#fff;text-align:center;padding:25px 15px}
+.hidden{display:none!important}.muted{color:var(--muted)}
+@media(max-width:800px){.search-box{grid-template-columns:1fr 1fr}.flight{grid-template-columns:1fr 1fr}.flight .route{grid-column:1/-1}.hero h1{font-size:30px}}
+@media(max-width:520px){.search-box,.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.flight{grid-template-columns:1fr}.nav{padding:12px}.logo{font-size:20px}.nav-actions .btn{padding:8px 10px;font-size:12px}}
+</style>
+</head>
+<body>
+<div class="sudan-pattern"></div>
+<header>
+  <nav class="nav">
+    <div class="logo">✈️ رحلتي <span>السودان</span></div>
+    <div class="nav-actions">
+      <button class="btn secondary" onclick="showHome()">الرئيسية</button>
+      <button id="accountBtn" class="btn secondary hidden" onclick="showAccount()">حسابي</button>
+      <button id="bookingsBtn" class="btn secondary hidden" onclick="showMyBookings()">حجوزاتي</button>
+      <button id="loginBtn" class="btn primary" onclick="openModal('loginModal')">تسجيل الدخول</button>
+      <button id="registerBtn" class="btn secondary" onclick="openModal('registerModal')">إنشاء حساب</button>
+      <button id="logoutBtn" class="btn danger hidden" onclick="logout()">خروج</button>
+    </div>
+  </nav>
+</header>
+
+<section id="home">
+<section class="hero">
+  <div class="hero-inner">
+    <h1>سافر من السودان إلى العالم</h1>
+    <p>ابحث عن رحلتك واحجز مقعدك بسهولة وأمان.</p>
+    <div class="search-box">
+      <div class="field"><label>من</label><input id="from" placeholder="مثال: بورتسودان أو PZU"></div>
+      <div class="field"><label>إلى</label><input id="to" placeholder="مثال: القاهرة أو CAI"></div>
+      <div class="field"><label>تاريخ السفر</label><input id="date" type="date"></div>
+      <button class="btn primary" onclick="searchFlights()">بحث عن الرحلات</button>
+    </div>
+  </div>
+</section>
+<div class="container">
+  <div class="section-title"><h2>الرحلات المتاحة</h2><span id="resultCount" class="muted"></span></div>
+  <div id="results" class="results"><div class="empty">استخدم نموذج البحث للعثور على الرحلات.</div></div>
+</div>
+</section>
+
+<section id="accountPage" class="container hidden">
+  <div class="section-title"><h2>حسابي</h2></div>
+  <div id="accountBox"></div>
+</section>
+
+<section id="bookingsPage" class="container hidden">
+  <div class="section-title"><h2>حجوزاتي</h2></div>
+  <div id="bookingsBox"></div>
+</section>
+
+<footer>رحلتي السودان © 2026 — منصة حجز رحلات الطيران</footer>
+
+<div id="loginModal" class="modal-back">
+  <div class="modal">
+    <button class="close" onclick="closeModal('loginModal')">×</button>
+    <h2>تسجيل الدخول</h2>
+    <div class="form-grid">
+      <div class="form-field full"><label>البريد الإلكتروني</label><input id="loginEmail" type="email"></div>
+      <div class="form-field full"><label>كلمة المرور</label><input id="loginPassword" type="password"></div>
+    </div>
+    <div class="form-actions"><button class="btn primary" onclick="login()">دخول</button></div>
+    <p id="loginMsg" class="muted"></p>
+  </div>
+</div>
+
+<div id="registerModal" class="modal-back">
+  <div class="modal">
+    <button class="close" onclick="closeModal('registerModal')">×</button>
+    <h2>إنشاء حساب</h2>
+    <div class="form-grid">
+      <div class="form-field"><label>الاسم الأول</label><input id="regFirst"></div>
+      <div class="form-field"><label>اسم العائلة</label><input id="regLast"></div>
+      <div class="form-field"><label>البريد الإلكتروني</label><input id="regEmail" type="email"></div>
+      <div class="form-field"><label>رقم الهاتف</label><input id="regPhone"></div>
+      <div class="form-field full"><label>كلمة المرور</label><input id="regPassword" type="password"></div>
+    </div>
+    <div class="form-actions"><button class="btn primary" onclick="register()">إنشاء الحساب</button></div>
+    <p id="registerMsg" class="muted"></p>
+  </div>
+</div>
+
+<div id="bookingModal" class="modal-back">
+  <div class="modal">
+    <button class="close" onclick="closeModal('bookingModal')">×</button>
+    <h2>بيانات المسافر</h2>
+    <div id="selectedFlight" class="ticket"></div>
+    <div class="form-grid" style="margin-top:14px">
+      <div class="form-field"><label>الاسم الأول</label><input id="passFirst"></div>
+      <div class="form-field"><label>اسم العائلة</label><input id="passLast"></div>
+      <div class="form-field"><label>الهاتف</label><input id="passPhone"></div>
+      <div class="form-field"><label>البريد</label><input id="passEmail" type="email"></div>
+      <div class="form-field"><label>رقم الجواز</label><input id="passPassport"></div>
+      <div class="form-field"><label>الجنسية</label><input id="passNationality" value="سوداني"></div>
+    </div>
+    <div class="form-actions"><button class="btn primary" onclick="confirmBooking()">تأكيد الحجز</button></div>
+    <p id="bookingMsg" class="muted"></p>
+  </div>
+</div>
+
+<div id="confirmationModal" class="modal-back">
+  <div class="modal">
+    <button class="close" onclick="closeModal('confirmationModal')">×</button>
+    <div id="confirmationBox"></div>
+  </div>
+</div>
+
+<script>
+let currentUser = null;
+let selectedFlight = null;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+
+function openModal(id){ $(id).classList.add('show'); }
+function closeModal(id){ $(id).classList.remove('show'); }
+
+async function checkUser(){
+  try{
+    const r=await fetch('/api/me'); const d=await r.json();
+    currentUser=d.loggedIn?d.user:null; updateNavigation();
+  }catch(e){}
+}
+function updateNavigation(){
+  ['accountBtn','bookingsBtn','logoutBtn'].forEach(id=>$(id).classList.toggle('hidden',!currentUser));
+  ['loginBtn','registerBtn'].forEach(id=>$(id).classList.toggle('hidden',!!currentUser));
+}
+function showHome(){
+  $('home').classList.remove('hidden'); $('accountPage').classList.add('hidden'); $('bookingsPage').classList.add('hidden');
+}
+async function login(){
+  const msg=$('loginMsg'); msg.textContent='';
+  const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:$('loginEmail').value,password:$('loginPassword').value})});
+  const d=await r.json(); if(!r.ok){msg.textContent=d.message;return;}
+  currentUser=d.user; updateNavigation(); closeModal('loginModal'); msg.textContent='';
+}
+async function register(){
+  const msg=$('registerMsg'); msg.textContent='';
+  const body={first_name:$('regFirst').value,last_name:$('regLast').value,email:$('regEmail').value,phone:$('regPhone').value,password:$('regPassword').value};
+  const r=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const d=await r.json(); if(!r.ok){msg.textContent=d.message;return;}
+  currentUser=d.user; updateNavigation(); closeModal('registerModal');
+}
+async function logout(){
+  await fetch('/api/logout',{method:'POST'}); currentUser=null; updateNavigation(); showHome();
+}
+async function searchFlights(){
+  const p=new URLSearchParams({from:$('from').value,to:$('to').value,date:$('date').value});
+  const r=await fetch('/api/search-flights?'+p); const d=await r.json();
+  $('resultCount').textContent=d.count+' رحلة';
+  if(!d.data.length){$('results').innerHTML='<div class="empty">لا توجد رحلات مطابقة للبحث.</div>';return;}
+  $('results').innerHTML=d.data.map(f=>`
+    <div class="flight">
+      <div><div class="airline">${esc(f.airline)}</div><div class="small">${esc(f.flight_number)}</div></div>
+      <div class="route"><div><div class="time">${esc(f.departure)}</div><div class="small">${esc(f.from_city)} (${esc(f.from_code)})</div></div><div class="arrow">←</div><div><div class="time">${esc(f.arrival)}</div><div class="small">${esc(f.to_city)} (${esc(f.to_code)})</div></div></div>
+      <div><div class="small">المدة</div><b>${esc(f.duration)}</b></div>
+      <div><div class="price">$${Number(f.price).toFixed(0)}</div><div class="seats">${f.seats} مقعد متاح</div></div>
+      <button class="btn primary" onclick="openBooking(${f.id})">احجز الآن</button>
+    </div>`).join('');
+}
+async function openBooking(id){
+  if(!currentUser){openModal('loginModal');$('loginMsg').textContent='سجل الدخول أولاً لإتمام الحجز.';return;}
+  const r=await fetch('/api/flights/'+id); const d=await r.json();
+  if(!r.ok){alert(d.message);return;} selectedFlight=d.data;
+  $('selectedFlight').innerHTML=`<h3>${esc(selectedFlight.airline)} — ${esc(selectedFlight.flight_number)}</h3><p>${esc(selectedFlight.from_city)} (${esc(selectedFlight.from_code)}) ← ${esc(selectedFlight.to_city)} (${esc(selectedFlight.to_code)})</p><p>${esc(selectedFlight.travel_date)} | ${esc(selectedFlight.departure)} - ${esc(selectedFlight.arrival)} | <b>$${Number(selectedFlight.price).toFixed(0)}</b></p>`;
+  $('passFirst').value=currentUser.first_name||'';$('passLast').value=currentUser.last_name||'';$('passPhone').value=currentUser.phone||'';$('passEmail').value=currentUser.email||'';
+  $('bookingMsg').textContent=''; openModal('bookingModal');
+}
+async function confirmBooking(){
+  const passenger={first_name:$('passFirst').value,last_name:$('passLast').value,phone:$('passPhone').value,email:$('passEmail').value,passport:$('passPassport').value,nationality:$('passNationality').value};
+  if(Object.values(passenger).some(v=>!v.trim())){$('bookingMsg').textContent='يرجى إكمال جميع بيانات المسافر.';return;}
+  const r=await fetch('/api/bookings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({flight_id:selectedFlight.id,passenger})});
+  const d=await r.json(); if(!r.ok){$('bookingMsg').textContent=d.message;return;}
+  closeModal('bookingModal'); showConfirmation(d.pnr);
+}
+async function showConfirmation(pnr){
+  const r=await fetch('/api/bookings/'+pnr); const d=await r.json(); if(!r.ok)return;
+  const b=d.data;
+  $('confirmationBox').innerHTML=`<div class="ticket"><h3>تم تأكيد الحجز ✈️</h3><p>رقم الحجز (PNR): <b>${esc(b.pnr)}</b></p><p>${esc(b.first_name)} ${esc(b.last_name)}</p><p>${esc(b.from_city)} (${esc(b.from_code)}) ← ${esc(b.to_city)} (${esc(b.to_code)})</p><p>التاريخ: ${esc(b.travel_date)} — ${esc(b.departure)}</p><p>السعر: <b>$${Number(b.total_price).toFixed(0)}</b></p></div><div class="form-actions"><button class="btn primary" onclick="closeModal('confirmationModal');showMyBookings()">عرض حجوزاتي</button></div>`;
+  openModal('confirmationModal');
+}
+async function showAccount(){
+  showPage('accountPage'); const r=await fetch('/api/my-account');
+  if(!r.ok)return; const d=await r.json(); const u=d.user;
+  $('accountBox').innerHTML=`<div class="account-card"><h3>${esc(u.first_name)} ${esc(u.last_name)}</h3><p>البريد: ${esc(u.email)}</p><p>الهاتف: ${esc(u.phone)}</p><p class="muted">تاريخ إنشاء الحساب: ${esc(u.created_at)}</p></div>`;
+}
+async function showMyBookings(){
+  showPage('bookingsPage'); const r=await fetch('/api/my-bookings'); const d=await r.json();
+  if(!d.data.length){$('bookingsBox').innerHTML='<div class="empty">لا توجد حجوزات حتى الآن.</div>';return;}
+  $('bookingsBox').innerHTML=d.data.map(b=>`<div class="booking-card"><div class="booking-head"><b>PNR: ${esc(b.pnr)}</b><span class="status ${b.status==='cancelled'?'cancelled':''}">${b.status==='cancelled'?'ملغى':'مؤكد'}</span></div><p><b>${esc(b.airline)}</b> — ${esc(b.flight_number)}</p><p>${esc(b.from_city)} (${esc(b.from_code)}) ← ${esc(b.to_city)} (${esc(b.to_code)})</p><p>${esc(b.travel_date)} | ${esc(b.departure)} | ${esc(b.first_name)} ${esc(b.last_name)}</p><p>السعر: <b>$${Number(b.total_price).toFixed(0)}</b></p>${b.status!=='cancelled'?`<button class="btn danger" onclick="cancelBooking('${esc(b.pnr)}')">إلغاء الحجز</button>`:''}</div>`).join('');
+}
+function showPage(id){$('home').classList.add('hidden');$('accountPage').classList.add('hidden');$('bookingsPage').classList.add('hidden');$(id).classList.remove('hidden');}
+async function cancelBooking(pnr){
+  if(!confirm('هل تريد إلغاء هذا الحجز؟'))return;
+  const r=await fetch('/api/bookings/'+pnr,{method:'DELETE'}); const d=await r.json();
+  alert(d.message||'تم'); if(r.ok)showMyBookings();
+}
+checkUser();
+</script>
+</body>
+</html>
